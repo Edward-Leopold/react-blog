@@ -13,9 +13,19 @@
     transition-property: background-color, color;
     transition-duration: 200ms;
     transition-timing-function: ease-out;
+
+    
   }
   
   .count button:hover {
     background-color: #656161; 
   }
   
+
+  .blackBtn{
+    padding: 10px;
+    border-radius: 8px;
+    background-color: black;
+    color: #fff;
+  }
+

@@ -2,10 +2,11 @@ import { Component } from 'react';
 import './BlogContent.scss';
 import posts from '../../shared/projectData'
 import { BlogCard } from './components/BlogCard';
+import AddPostForm from './components/AddPostForm';
 
 export default class BlogContent extends Component {
     state = {
-        showBlog: true,
+        showAddForm: false,
         blogArr: JSON.parse(localStorage.getItem('blogPosts')) || posts
     }
 
@@ -38,14 +39,19 @@ export default class BlogContent extends Component {
 
     }
 
-
-    toggleBlog = () => {
-        this.setState((state) => {
-            return {
-                showBlog: !state.showBlog
-            }
+    handleAddFormShow = () => {
+        this.setState({
+            showAddForm: true
         })
     }
+
+    handleAddFormHide = () => {
+        this.setState({
+            showAddForm: false
+        })
+    }
+
+
 
     render() {
 
@@ -67,22 +73,24 @@ export default class BlogContent extends Component {
             <>
 
 
-                <button onClick={this.toggleBlog}>{
-                    this.state.showBlog ? 'Hide blog' : 'Show blog'
-                }</button>
-
                 {
-                    this.state.showBlog ?
-                        <>
-                            <h1>Simple Blog</h1>
-
-                            <div className="posts">
-                                {blogPosts}
-                            </div>
-
-                        </>
-                        : null
+                    this.state.showAddForm ? <AddPostForm handleAddFormHide={this.handleAddFormHide} /> : null
                 }
+
+
+
+
+                <>
+                    <h1>Simple Blog</h1>
+
+                    <button className='blackBtn' onClick={this.handleAddFormShow}>Создать новый пост</button>
+
+                    <div className="posts">
+                        {blogPosts}
+                    </div>
+
+                </>
+
 
 
             </ >
