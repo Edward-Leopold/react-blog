@@ -2,7 +2,7 @@ import { Component } from 'react';
 import './BlogContent.scss';
 import posts from '../../shared/projectData'
 import { BlogCard } from './components/BlogCard';
-import AddPostForm from './components/AddPostForm';
+import { AddPostForm } from './components/AddPostForm';
 
 export default class BlogContent extends Component {
     state = {
