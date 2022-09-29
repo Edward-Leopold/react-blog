@@ -51,6 +51,22 @@ export default class BlogContent extends Component {
         })
     }
 
+    addNewBlogPost = (blogPost) => {
+
+        this.setState((state) => {
+            const posts = [...state.blogArr];
+            posts.push(blogPost);
+            localStorage.setItem('blogPosts', JSON.stringify(posts));
+            return {
+                blogArr: posts
+            }
+        })
+
+
+
+        this.handleAddFormHide();
+    }
+
 
 
     render() {
@@ -71,15 +87,14 @@ export default class BlogContent extends Component {
 
         return (
             <>
-
-
                 {
-                    this.state.showAddForm ? <AddPostForm handleAddFormHide={this.handleAddFormHide} /> : null
+                    this.state.showAddForm ? (
+                        <AddPostForm
+                            blogArr={this.state.blogArr}
+                            addNewBlogPost={this.addNewBlogPost}
+                        />
+                    ) : null
                 }
-
-
-
-
                 <>
                     <h1>Simple Blog</h1>
 
@@ -90,10 +105,7 @@ export default class BlogContent extends Component {
                     </div>
 
                 </>
-
-
-
-            </ >
+            </>
         )
     }
 }

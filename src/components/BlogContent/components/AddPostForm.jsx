@@ -20,6 +20,17 @@ export class AddPostForm extends React.Component {
         })
     }
 
+    createPost = () => {
+        const post = {
+            id: this.props.blogArr.length + 1,
+            title: this.state.postTitle,
+            description: this.state.postDescription,
+            liked: false,
+        }
+
+        this.props.addNewBlogPost(post);
+    }
+
     render() {
         const handleAddFormHide = this.props.handleAddFormHide;
         return (
@@ -43,7 +54,7 @@ export class AddPostForm extends React.Component {
                 </div>
                 <div>
                     <button
-                        onClick={handleAddFormHide}
+                        onClick={this.createPost}
                         className="addPostBtn blackBtn"
                         type="button"
                     >Добавить пост</button>
