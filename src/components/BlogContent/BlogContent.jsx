@@ -3,11 +3,12 @@ import './BlogContent.scss';
 import posts from '../../shared/projectData'
 import { BlogCard } from './components/BlogCard';
 import { AddPostForm } from './components/AddPostForm';
+import axios from "axios";
 
 export default class BlogContent extends Component {
     state = {
         showAddForm: false,
-        blogArr: JSON.parse(localStorage.getItem('blogPosts')) || posts
+        blogArr: [],
     }
 
     likePost = index => {
@@ -61,10 +62,19 @@ export default class BlogContent extends Component {
                 blogArr: posts
             }
         })
+    }
 
-
-
-        this.handleAddFormHide();
+    // При маунтинге (первой отрисовке)
+    componentDidMount() {
+        axios.get("https://63372a395327df4c43d0f069.mockapi.io/posts")
+            .then((response) => {
+                this.setState({
+                    blogArr: response.data
+                })
+            })
+            .catch((err) => {
+                console.log(err.response.status)
+            })
     }
 
 
@@ -84,6 +94,11 @@ export default class BlogContent extends Component {
             )
         })
 
+        if (this.state.blogArr.length == 0) {
+            return (
+                <h2>Загружаю данные...</h2>
+            )
+        }
 
         return (
             <>
@@ -92,6 +107,7 @@ export default class BlogContent extends Component {
                         <AddPostForm
                             blogArr={this.state.blogArr}
                             addNewBlogPost={this.addNewBlogPost}
+                            handleAddFormHide={this.handleAddFormHide}
                         />
                     ) : null
                 }

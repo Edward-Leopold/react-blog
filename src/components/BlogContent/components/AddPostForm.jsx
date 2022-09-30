@@ -20,7 +20,8 @@ export class AddPostForm extends React.Component {
         })
     }
 
-    createPost = () => {
+    createPost = (e) => {
+        e.preventDefault();
         const post = {
             id: this.props.blogArr.length + 1,
             title: this.state.postTitle,
@@ -29,12 +30,13 @@ export class AddPostForm extends React.Component {
         }
 
         this.props.addNewBlogPost(post);
+        this.props.handleAddFormHide();
     }
 
     render() {
         const handleAddFormHide = this.props.handleAddFormHide;
         return (
-            <form className='addPostForm' action="">
+            <form className='addPostForm' action="" onSubmit={this.createPost}>
                 <div>
                     <input
                         className='addPostInput'
@@ -42,6 +44,7 @@ export class AddPostForm extends React.Component {
                         name="postTitle"
                         value={this.state.postTitle}
                         onChange={this.handlePostTitleChange}
+                        required
                     />
                 </div>
                 <div>
@@ -50,13 +53,13 @@ export class AddPostForm extends React.Component {
                         name="postDescription"
                         value={this.state.postDescription}
                         onChange={this.handlePostDescChange}
+                        required
                     />
                 </div>
                 <div>
                     <button
-                        onClick={this.createPost}
                         className="addPostBtn blackBtn"
-                        type="button"
+                        type="submit"
                     >Добавить пост</button>
                 </div>
                 <button className='hideBtn' onClick={handleAddFormHide}>
