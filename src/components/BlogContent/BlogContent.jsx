@@ -1,9 +1,9 @@
 import { Component } from 'react';
 import './BlogContent.scss';
-import posts from '../../shared/projectData'
 import { BlogCard } from './components/BlogCard';
 import { AddPostForm } from './components/AddPostForm';
 import axios from "axios";
+import { CircularProgress } from '@mui/material';
 
 export default class BlogContent extends Component {
     state = {
@@ -12,10 +12,13 @@ export default class BlogContent extends Component {
         isPending: false
     }
 
-    fetchPosts = () => {
-        this.setState({
-            isPending: true
-        })
+    fetchPosts = (pending = false) => {
+        if (pending) {
+            this.setState({
+                isPending: true
+            });
+        }
+
 
         axios.get("https://63372a395327df4c43d0f069.mockapi.io/posts")
             .then((response) => {
@@ -29,18 +32,17 @@ export default class BlogContent extends Component {
             })
     }
 
-    likePost = index => {
-        const temp = [...this.state.blogArr];
-        temp[index].liked = !temp[index].liked;
+    likePost = blogPost => {
+        const temp = { ...blogPost };
+        temp.liked = !temp.liked;
 
-        this.setState({
-            blogArr: temp
-        })
+        axios.put(`https://63372a395327df4c43d0f069.mockapi.io/posts/${blogPost.id}`, temp)
+            .then((response) => {
+                console.log("Post has been liked => ", response.data)
 
-        console.log(temp)
-        localStorage.setItem('blogPosts', JSON.stringify(temp))
-
-        this.render()
+                this.fetchPosts()
+            })
+            .catch((err) => console.log(err))
     }
 
     deletePost = (blogPost) => {
@@ -49,7 +51,7 @@ export default class BlogContent extends Component {
                 .then((response) => {
                     console.log("Post has been deleted => ", response.data)
 
-                    this.fetchPosts()
+                    this.fetchPosts(true)
                 })
                 .catch((err) => console.log(err))
         }
@@ -73,17 +75,9 @@ export default class BlogContent extends Component {
             .then((response) => {
                 console.log("Post has been added =>", response.data);
 
-                this.fetchPosts()
+                this.fetchPosts(true)
             })
             .catch(err => console.log(err))
-        // this.setState((state) => {
-        //     const posts = [...state.blogArr];
-        //     posts.push(blogPost);
-        //     localStorage.setItem('blogPosts', JSON.stringify(posts));
-        //     return {
-        //         blogArr: posts
-        //     }
-        // })
     }
 
 
@@ -97,14 +91,14 @@ export default class BlogContent extends Component {
 
     render() {
 
-        const blogPosts = this.state.blogArr.map((item, index) => {
+        const blogPosts = this.state.blogArr.map((item) => {
             return (
                 <BlogCard
                     title={item.title}
                     description={item.description}
                     key={item.id}
                     liked={item.liked}
-                    likePost={() => this.likePost(index)}
+                    likePost={() => this.likePost(item)}
                     deletePost={() => this.deletePost(item)}
                 />
             )
@@ -117,7 +111,7 @@ export default class BlogContent extends Component {
         }
 
         return (
-            <>
+            <div className='blog-content'>
                 {
                     this.state.showAddForm ? (
                         <AddPostForm
@@ -132,14 +126,14 @@ export default class BlogContent extends Component {
 
                     <button className='blackBtn' onClick={this.handleAddFormShow}>Создать новый пост</button>
                     {
-                        this.state.isPending && <h2>Подождите...</h2>
+                        this.state.isPending && <CircularProgress className='circle' />
                     }
                     <div className="posts">
                         {blogPosts}
                     </div>
 
                 </>
-            </>
+            </div>
         )
     }
 }
