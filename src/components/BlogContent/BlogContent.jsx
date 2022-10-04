@@ -44,7 +44,7 @@ export default class BlogContent extends Component {
             })
             .catch((err) => console.log(err))
     }
-
+    // Удаление Поста
     deletePost = (blogPost) => {
         if (window.confirm(`Удалить ${blogPost.title}?`)) {
             axios.delete(`https://63372a395327df4c43d0f069.mockapi.io/posts/${blogPost.id}`)
@@ -55,6 +55,10 @@ export default class BlogContent extends Component {
                 })
                 .catch((err) => console.log(err))
         }
+    }
+
+    // Редактирование поста
+    editPost = (blogPost) => {
 
     }
 
@@ -100,6 +104,7 @@ export default class BlogContent extends Component {
                     liked={item.liked}
                     likePost={() => this.likePost(item)}
                     deletePost={() => this.deletePost(item)}
+                    editPost={() => this.editPost(item)}
                 />
             )
         })

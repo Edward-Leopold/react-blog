@@ -35,37 +35,41 @@ export class AddPostForm extends React.Component {
     render() {
         const handleAddFormHide = this.props.handleAddFormHide;
         return (
-            <form className='addPostForm' action="" onSubmit={this.createPost}>
-                <div>
-                    <input
-                        className='addPostInput'
-                        type="text"
-                        name="postTitle"
-                        value={this.state.postTitle}
-                        onChange={this.handlePostTitleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <textarea
-                        className='addPostTextarea'
-                        name="postDescription"
-                        value={this.state.postDescription}
-                        onChange={this.handlePostDescChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <button
-                        className="addPostBtn blackBtn"
-                        type="submit"
-                    >Добавить пост</button>
-                </div>
-                <button className='hideBtn' onClick={handleAddFormHide}>
-                    <CancelIcon />
-                </button>
+            <div className="addPostForm-cover">
+                <form className='addPostForm' action="" onSubmit={this.createPost}>
+                    <div>
+                        <input
+                            placeholder='Введите заголовок поста'
+                            className='addPostInput'
+                            type="text"
+                            name="postTitle"
+                            value={this.state.postTitle}
+                            onChange={this.handlePostTitleChange}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <textarea
+                            placeholder='Введите текст поста'
+                            className='addPostTextarea'
+                            name="postDescription"
+                            value={this.state.postDescription}
+                            onChange={this.handlePostDescChange}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <button
+                            className="addPostBtn blackBtn"
+                            type="submit"
+                        >Добавить пост</button>
+                    </div>
+                    <button className='hideBtn' onClick={handleAddFormHide}>
+                        <CancelIcon />
+                    </button>
+                </form>
+            </div>
 
-            </form>
         )
     }
 }

@@ -1,16 +1,19 @@
-.post{
+.post {
     display: flex;
     align-items: center;
     justify-content: space-between;
 
 }
 
-button{
+button {
     background-color: transparent;
 }
 
+.postControl {
+    display: flex;
+    align-items: center;
+}
 
-
-.deleteBtn svg{
+.deleteBtn svg {
     font-size: 40px;
 }
