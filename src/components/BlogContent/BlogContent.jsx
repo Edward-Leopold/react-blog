@@ -2,14 +2,17 @@ import { Component } from 'react';
 import './BlogContent.scss';
 import { BlogCard } from './components/BlogCard';
 import { AddPostForm } from './components/AddPostForm';
+import { EditPostForm } from './components/EditPostForm';
 import axios from "axios";
 import { CircularProgress } from '@mui/material';
 
 export default class BlogContent extends Component {
     state = {
         showAddForm: false,
+        showEditForm: false,
         blogArr: [],
-        isPending: false
+        isPending: false,
+        selectedPost: {}
     }
 
     fetchPosts = (pending = false) => {
@@ -58,26 +61,53 @@ export default class BlogContent extends Component {
     }
 
     // Редактирование поста
-    editPost = (blogPost) => {
-
+    // показываем форму редактирвания
+    handleEditFormShow = () => {
+        this.setState({
+            showEditForm: true
+        })
     }
-
+    // скрываем форму редактирования
+    handleEditFormHide = () => {
+        this.setState({
+            showEditForm: false
+        })
+    }
+    // Следим за выбранным постом для редактирования в состоянии BlogContent
+    handleSelectPost = (blogPost) => {
+        this.setState({
+            selectedPost: blogPost
+        })
+    }
+    // показываем форму ДОбавления поста
     handleAddFormShow = () => {
         this.setState({
             showAddForm: true
         })
     }
-
+    // скрываем форму добавления поста
     handleAddFormHide = () => {
         this.setState({
             showAddForm: false
         })
     }
 
+    // функция добавления нового поста
     addNewBlogPost = (blogPost) => {
         axios.post("https://63372a395327df4c43d0f069.mockapi.io/posts/", blogPost)
             .then((response) => {
                 console.log("Post has been added =>", response.data);
+
+                this.fetchPosts(true)
+            })
+            .catch(err => console.log(err))
+    }
+
+    // Функция редактирования поста
+    editBlogPost = (editedPost) => {
+        axios.put(`https://63372a395327df4c43d0f069.mockapi.io/posts/${editedPost.id}`, editedPost)
+            .then((response) => {
+                console.log("Post has been edited =>", response.data);
 
                 this.fetchPosts(true)
             })
@@ -94,7 +124,7 @@ export default class BlogContent extends Component {
 
 
     render() {
-
+        //console.log(this.state.selectedPost)
         const blogPosts = this.state.blogArr.map((item) => {
             return (
                 <BlogCard
@@ -104,7 +134,8 @@ export default class BlogContent extends Component {
                     liked={item.liked}
                     likePost={() => this.likePost(item)}
                     deletePost={() => this.deletePost(item)}
-                    editPost={() => this.editPost(item)}
+                    handleEditFormShow={this.handleEditFormShow}
+                    handleSelectPost={() => this.handleSelectPost(item)}
                 />
             )
         })
@@ -123,6 +154,16 @@ export default class BlogContent extends Component {
                             blogArr={this.state.blogArr}
                             addNewBlogPost={this.addNewBlogPost}
                             handleAddFormHide={this.handleAddFormHide}
+                        />
+                    ) : null
+                }
+
+                {
+                    this.state.showEditForm ? (
+                        <EditPostForm
+                            handleEditFormHide={this.handleEditFormHide}
+                            selectedPost={this.state.selectedPost}
+                            editBlogPost={this.editBlogPost}
                         />
                     ) : null
                 }
