@@ -1,12 +1,13 @@
 import { Component } from 'react';
-import './BlogContent.scss';
+import './BlogPage.scss';
 import { BlogCard } from './components/BlogCard';
 import { AddPostForm } from './components/AddPostForm';
 import { EditPostForm } from './components/EditPostForm';
 import axios from "axios";
 import { CircularProgress } from '@mui/material';
+import { postsUrl } from '../../shared/projectData';
 
-export default class BlogContent extends Component {
+export default class BlogPage extends Component {
     state = {
         showAddForm: false,
         showEditForm: false,
@@ -23,7 +24,7 @@ export default class BlogContent extends Component {
         }
 
 
-        axios.get("https://63372a395327df4c43d0f069.mockapi.io/posts")
+        axios.get(postsUrl)
             .then((response) => {
                 this.setState({
                     blogArr: response.data,
@@ -35,11 +36,16 @@ export default class BlogContent extends Component {
             })
     }
 
+    // При маунтинге (первой отрисовке)
+    componentDidMount() {
+        this.fetchPosts();
+    }
+
     likePost = blogPost => {
         const temp = { ...blogPost };
         temp.liked = !temp.liked;
 
-        axios.put(`https://63372a395327df4c43d0f069.mockapi.io/posts/${blogPost.id}`, temp)
+        axios.put(`${postsUrl}${blogPost.id}`, temp)
             .then((response) => {
                 console.log("Post has been liked => ", response.data)
 
@@ -50,7 +56,7 @@ export default class BlogContent extends Component {
     // Удаление Поста
     deletePost = (blogPost) => {
         if (window.confirm(`Удалить ${blogPost.title}?`)) {
-            axios.delete(`https://63372a395327df4c43d0f069.mockapi.io/posts/${blogPost.id}`)
+            axios.delete(`${postsUrl}${blogPost.id}`)
                 .then((response) => {
                     console.log("Post has been deleted => ", response.data)
 
@@ -94,7 +100,7 @@ export default class BlogContent extends Component {
 
     // функция добавления нового поста
     addNewBlogPost = (blogPost) => {
-        axios.post("https://63372a395327df4c43d0f069.mockapi.io/posts/", blogPost)
+        axios.post(`${postsUrl}`, blogPost)
             .then((response) => {
                 console.log("Post has been added =>", response.data);
 
@@ -105,7 +111,7 @@ export default class BlogContent extends Component {
 
     // Функция редактирования поста
     editBlogPost = (editedPost) => {
-        axios.put(`https://63372a395327df4c43d0f069.mockapi.io/posts/${editedPost.id}`, editedPost)
+        axios.put(`${postsUrl}${editedPost.id}`, editedPost)
             .then((response) => {
                 console.log("Post has been edited =>", response.data);
 
@@ -116,10 +122,7 @@ export default class BlogContent extends Component {
 
 
 
-    // При маунтинге (первой отрисовке)
-    componentDidMount() {
-        this.fetchPosts();
-    }
+
 
 
 
@@ -140,7 +143,7 @@ export default class BlogContent extends Component {
             )
         })
 
-        if (this.state.blogArr.length == 0) {
+        if (this.state.blogArr.length === 0) {
             return (
                 <h2>Загружаю данные...</h2>
             )
